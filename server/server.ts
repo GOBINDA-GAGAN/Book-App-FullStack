@@ -2,13 +2,17 @@
 
 import app from "./src/app"
 import { _Config } from "./src/config/config";
+import dbConnection from "./src/config/db";
 
-const startServer = () => {
+const startServer = async () => {
+  await dbConnection();
+
+  
   const port = _Config.port || 3000
 
-app.listen(port, () => {
-  console.log(`server listing on port ${ port }`);
+  app.listen(port, () => {
+    console.log(`server listing on port ${port}`);
 
-})
+  })
 }
 startServer();
