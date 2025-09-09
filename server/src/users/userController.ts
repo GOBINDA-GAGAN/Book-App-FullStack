@@ -33,7 +33,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       _Config.JWT_SECRET,
       { expiresIn: "7d" }
     );
-    
+
 
     await newUser.save();
 
@@ -47,7 +47,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
   } catch (error) {
 
 
-    return next(error)
+    return next(createHttpError(500, `server error ${error}`))
 
   }
 }
