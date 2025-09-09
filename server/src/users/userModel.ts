@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema<User>(
       type: String,
       required: true,
     },
+    isLogin:{
+      type:Boolean,
+      default:false
+    }
 
   }, {
   timestamps: true

@@ -55,8 +55,55 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      const error = createHttpError(400, "All Field Required");
+      return next(error);
+    }
+
+
+    const existingUser = await userModel.findOne({ email });
+    if (!existingUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found 🚫"
+      });
+    }
+
+
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+
+
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Incorrect credentials",
+      });
+    }
+
+    if (existingUser.isLogin) {
+      return res.status(200).json({
+        success: true,
+        message: "User already logged in 🚀",
+        data: existingUser
+      });
+    }
+    const token = jwt.sign(
+      { sub: existingUser._id },
+      _Config.JWT_SECRET,
+      { expiresIn: "7d" }
+    )
+
+    const isLogIn = existingUser.isLogin = true;
+    await existingUser.save();
+
     return res.status(200).json({
-      message: "login successfully"
+      message: isLogIn ? "Login successfully" : "Already Login",
+      token: token,
+      data: existingUser
     })
 
   } catch (error) {
