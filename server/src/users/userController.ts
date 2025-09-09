@@ -1,7 +1,10 @@
 
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-import UserModel from "./userModel";
+import userModel from "./userModel";
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken";
+import { _Config } from "../config/config";
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,16 +17,31 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       return next(error);
     }
 
-    const existingUser = await UserModel.findOne({ email });
+    const existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ 
-        success: false, 
-        message: "User already exists 🚫" 
+      return res.status(409).json({
+        success: false,
+        message: "User already exists 🚫"
       });
     }
 
+    const hashPassword = await bcrypt.hash(password, 10);
+    const newUser = await userModel.create({ name, password: hashPassword, email })
+
+    const token = jwt.sign(
+      { sub: newUser._id },
+      _Config.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    
+
+    await newUser.save();
+
     return res.status(201).json({
-      message: "user created successfully"
+      message: "user created successfully",
+      id: newUser._id,
+      token: token ? token : "No token",
+      data: newUser
     })
 
   } catch (error) {
