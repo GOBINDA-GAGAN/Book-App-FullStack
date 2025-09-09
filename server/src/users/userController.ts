@@ -52,3 +52,16 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
   }
 }
 
+
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    return res.status(200).json({
+      message: "login successfully"
+    })
+
+  } catch (error) {
+    return next(createHttpError(500, `server error ${error}`))
+  }
+
+}
+
