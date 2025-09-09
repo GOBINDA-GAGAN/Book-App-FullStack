@@ -1,11 +1,25 @@
 import express from "express";
-import {  createBook, deleteBook, getAllBooks, getBook, getBookById, updateBook } from "./bookController";
+import { createBook, deleteBook, getAllBooks, getBook, getBookById, updateBook } from "./bookController";
+import multer from "multer";
+import path from "node:path";
 
 const bookRouter = express.Router();
 
+const upload = multer({
+  dest: path.resolve(__dirname, "../../public/data/uploads"),
+  limits: { files: 3e7 }
+})
+
 
 // Create a new book
-bookRouter.post("/create-book", createBook);
+bookRouter.post("/create-book", upload.fields([
+  {name: "coverImage", maxCount: 1},
+  {name: "file", maxCount: 1},
+
+
+
+
+]), createBook);
 
 // Update a book by ID
 bookRouter.put("/update-book/:id", updateBook);
