@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import userModel from "./userModel";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
-import { _Config } from "../config/config";
+import { _Config } from "../../config/config";
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -51,7 +51,6 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
   }
 }
-
 
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -111,4 +110,30 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
   }
 
 }
+
+export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const { userId } = req.body; 
+    const userId = "68bfea4b6118b72367493b1f"
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found 🚫"
+      });
+    }
+
+    user.isLogin = false;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful 🚪"
+    });
+  } catch (error) {
+    return next(createHttpError(500, `Server error: ${error}`));
+  }
+};
+
 

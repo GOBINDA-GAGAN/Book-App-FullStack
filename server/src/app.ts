@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import { globalError } from "./middlewares/errorHandler";
-import userRouter from "./users/userRouter";
+import userRouter from "./service/users/userRouter";
 
 const app = express();
 app.use(express.json())
@@ -17,7 +17,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/users",userRouter)
+app.use("/api/users", userRouter)
 
 // Example: handle 404 (route not found)
 app.use((req: Request, res: Response, next: NextFunction) => {
