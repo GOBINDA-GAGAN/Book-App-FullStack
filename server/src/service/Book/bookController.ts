@@ -4,7 +4,9 @@ import createHttpError from "http-errors";
 // Create Book
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
- 
+    console.log("files:", req.files);
+
+
     return res.status(201).json({ message: "Book created successfully 📚" });
   } catch (error) {
     return next(createHttpError(500, `Server error: ${error}`));
@@ -14,7 +16,7 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
 // Update Book
 export const updateBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    
+
     return res.status(200).json({ message: "Book updated successfully ✍️" });
   } catch (error) {
     return next(createHttpError(500, `Server error: ${error}`));
@@ -24,7 +26,7 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
 // Get Single Book by ID
 export const getBookById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    
+
     return res.status(200).json({ message: "Single book fetched 📖" });
   } catch (error) {
     return next(createHttpError(500, `Server error: ${error}`));
@@ -34,7 +36,7 @@ export const getBookById = async (req: Request, res: Response, next: NextFunctio
 // Get All Books
 export const getAllBooks = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    
+
     return res.status(200).json({ message: "All books fetched 📚" });
   } catch (error) {
     return next(createHttpError(500, `Server error: ${error}`));
@@ -44,7 +46,7 @@ export const getAllBooks = async (req: Request, res: Response, next: NextFunctio
 // Get Book (generic name, in case you need filtered search)
 export const getBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    
+
     return res.status(200).json({ message: "Book fetched ✅" });
   } catch (error) {
     return next(createHttpError(500, `Server error: ${error}`));
