@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { HttpError } from "http-errors";
 import { _Config } from "../config/config";
 
@@ -6,7 +6,7 @@ export const globalError = (
   err: HttpError,
   req: Request,
   res: Response,
-  next: NextFunction
+  // next: NextFunction
 ) => {
   const statusCode = err.statusCode || 500;
 

@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json())
 
 // Routes
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
+app.get("/", (req: Request, res: Response) => {
 
   return res.status(200).json({
     message: "Welcome to Book API 🚀",

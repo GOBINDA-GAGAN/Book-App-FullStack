@@ -1,6 +1,7 @@
 
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
+import UserModel from "./userModel";
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -13,7 +14,15 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       return next(error);
     }
 
-    return res.status(200).json({
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ 
+        success: false, 
+        message: "User already exists 🚫" 
+      });
+    }
+
+    return res.status(201).json({
       message: "user created successfully"
     })
 
