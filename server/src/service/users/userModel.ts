@@ -16,15 +16,16 @@ const userSchema = new mongoose.Schema<User>(
       type: String,
       required: true,
     },
-    isLogin:{
-      type:Boolean,
-      default:false
+    isLogin: {
+      type: Boolean,
+      default: false
     }
 
   }, {
   timestamps: true
 })
 
-const UserModel = mongoose.model<User>("User", userSchema);
+const UserModel =
+  mongoose.models.User || mongoose.model<User>("User", userSchema);
 
-export default UserModel; 
+export default UserModel;

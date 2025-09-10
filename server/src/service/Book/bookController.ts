@@ -2,44 +2,51 @@ import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
 import { cloudinary } from "../../config/cloudinary";
 import path from "node:path";
-
+import bookModel from "./bookModel";
+import { promises as fsPromises } from "fs";
 
 // Create Book
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
-
-
+    const { title, genre } = req.body;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] }
     const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1)
     const filename = files.coverImage[0].filename;
-
-
     const filePath = path.resolve(__dirname, "../../../public/data/uploads", filename);
-
     const uploadResult = await cloudinary.uploader.upload(filePath, {
       filename_override: filename,
       folder: "Book-Cover",
       format: coverImageMimeType
     })
-
     const bookFileName = files.file[0].filename;
     const bookPath = path.resolve(__dirname, "../../../public/data/uploads", bookFileName);
-     const bookMimeType = files.file[0].mimetype.split("/").at(-1)
-
+    const bookMimeType = files.file[0].mimetype.split("/").at(-1)
     const uploadBookResult = await cloudinary.uploader.upload(bookPath, {
-      resource_type:"raw",
+      resource_type: "raw",
       filename_override: bookFileName,
       folder: "Book-PDF",
       format: bookMimeType
     })
-
     console.log(uploadResult);
     console.log(uploadBookResult);
+    const newBook = await bookModel.create({
+      title,
+      genre,
+      author: "68bfea4b6118b72367493b1f",
+      coverImage: uploadResult.secure_url,
+      file: uploadBookResult.secure_url
+    })
+
+   await fsPromises.unlink(filePath);
+await fsPromises.unlink(bookPath);
 
 
 
-    return res.status(201).json({ message: "Book created successfully 📚" });
+    return res.status(201).json({
+      message: "Book created successfully 📚",
+      id: newBook._id
+    });
   } catch (error) {
     return next(createHttpError(500, `Server error: ${error}`));
   }
