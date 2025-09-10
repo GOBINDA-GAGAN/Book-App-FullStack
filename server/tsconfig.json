@@ -3,10 +3,11 @@
     "rootDir": "./",
     "outDir": "dist",
     "module": "commonjs",
-    "target": "es6",
     "types": [],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "target": "es2022",
+    "lib": ["es2022", "dom"], 
   }
 }
