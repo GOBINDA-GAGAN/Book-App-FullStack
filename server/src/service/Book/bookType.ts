@@ -5,8 +5,8 @@ export interface Book {
   title:string;
   author:User;
   genre:string;
-  coverImage:string;
-  file:string;
+  coverImage: { url: string; public_id: string };
+  file: { url: string; public_id: string };
   createdAt:Date;
   updatedAt:Date
 }

@@ -16,14 +16,13 @@ const upload = multer({
 bookRouter.post("/create-book", verifyUser, upload.fields([
   {name: "coverImage", maxCount: 1},
   {name: "file", maxCount: 1},
-
-
-
-
 ]), createBook);
 
 // Update a book by ID
-bookRouter.put("/update-book/:id", updateBook);
+bookRouter.patch("/update-book/:id",verifyUser, upload.fields([
+  {name: "coverImage", maxCount: 1},
+  {name: "file", maxCount: 1},
+]), updateBook);
 
 // Get a single book (custom/filter)
 bookRouter.get("/get-book", getBook);
@@ -35,7 +34,7 @@ bookRouter.get("/get-book/:id", getBookById);
 bookRouter.get("/get-all-books", getAllBooks);
 
 // Delete book by ID
-bookRouter.delete("/delete-book/:id", deleteBook);
+bookRouter.delete("/delete-book",verifyUser, deleteBook);
 
 
 
