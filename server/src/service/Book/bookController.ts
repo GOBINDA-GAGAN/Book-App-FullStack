@@ -5,11 +5,19 @@ import path from "node:path";
 import bookModel from "./bookModel";
 import { promises as fsPromises } from "fs";
 
+
+interface AuthRequest extends Request {
+  userId: string
+}
 // Create Book
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
     const { title, genre } = req.body;
+
+    const _req = req as AuthRequest
+    const userId = _req.userId;
+
     const files = req.files as { [fieldname: string]: Express.Multer.File[] }
     const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1)
     const filename = files.coverImage[0].filename;
@@ -33,13 +41,13 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
     const newBook = await bookModel.create({
       title,
       genre,
-      author: "68bfea4b6118b72367493b1f",
+      author: userId,
       coverImage: uploadResult.secure_url,
       file: uploadBookResult.secure_url
     })
 
-   await fsPromises.unlink(filePath);
-await fsPromises.unlink(bookPath);
+    await fsPromises.unlink(filePath);
+    await fsPromises.unlink(bookPath);
 
 
 
